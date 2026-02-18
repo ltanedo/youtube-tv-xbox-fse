@@ -6,17 +6,21 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:msi": "electron-builder --win --config.compression=store"
   },
   "build": {
     "appId": "com.haroon01.youtubetvclient",
     "productName": "YouTubeTV",
     "files": [
       "index.js",
-      "package.json"
+      "package.json",
+      "xinput-poller.ps1",
+      "yttv-icon.png"
     ],
     "win": {
-      "target": ["portable"],
+      "target": ["msi"],
       "icon": "img/icon/youtube.ico",
       "artifactName": "${productName}_v${version}_x64_win.${ext}"
     },
