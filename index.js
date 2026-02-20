@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require('electron');
+const path = require('path');
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -6,7 +7,8 @@ function createWindow() {
         autoHideMenuBar: true,
         webPreferences: {
             nodeIntegration: false,
-            contextIsolation: true
+            contextIsolation: true,
+            preload: path.join(__dirname, 'preload.js')
         }
     });
     // pressing alt can bring up the menu bar even when its hidden. This accounts for that and disables it entirely
@@ -19,6 +21,13 @@ function createWindow() {
     // setting zoom 50% to enable higher resolutions. has no effect on the applications UI.
     win.webContents.on('did-finish-load', () => {
         win.webContents.setZoomFactor(0.5);
+
+        // Override Page Visibility API to prevent YouTube auto-pause on background
+        win.webContents.executeJavaScript(`
+            Object.defineProperty(document, 'hidden', { get: () => false, configurable: true });
+            Object.defineProperty(document, 'visibilityState', { get: () => 'visible', configurable: true });
+            console.log('Background play: Visibility API overridden');
+        `);
     });
 }
 

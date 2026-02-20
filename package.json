@@ -13,6 +13,7 @@
     "productName": "YouTubeTV",
     "files": [
       "index.js",
+      "preload.js",
       "package.json"
     ],
     "win": {
