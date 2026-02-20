@@ -17,26 +17,38 @@ function createWindow() {
         userAgent: 'Mozilla/5.0 (PS4; Leanback Shell) Gecko/20100101 Firefox/65.0 LeanbackShell/01.00.01.75 Sony PS4/ (PS4, , no, CH)'
     });
 
+    // Toggle fullscreen with 'G' key (only when window focused)
+    win.webContents.on('before-input-event', (event, input) => {
+        if (input.key.toLowerCase() === 'g') {
+            event.preventDefault();
+            win.setFullScreen(!win.isFullScreen());
+        }
+    });
+
     win.webContents.on('did-finish-load', () => {
         win.webContents.setZoomFactor(0.5);
 
-        // Create floating PiP button in top right
+        // Toggle PiP function
         win.webContents.executeJavaScript(`
-            const btn = document.createElement('button');
-            btn.id = 'pip-btn';
-            btn.textContent = 'BG PLAY';
-            btn.style.cssText = 'position:fixed; top:10px; right:10px; z-index:999999; background:rgba(255,0,0,0.8); color:white; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; font-size:14px; font-weight:bold;';
-            btn.onclick = function() {
-                const video = document.querySelector('video');
-                if (video && document.pictureInPictureElement === video) {
-                    document.exitPictureInPicture();
-                    btn.textContent = 'BG PLAY';
-                } else if (video) {
-                    video.requestPictureInPicture().catch(e => console.error('PiP error:', e));
-                    btn.textContent = 'EXIT PiP';
+            window.togglePiP = function() {
+                const pipVideo = document.pictureInPictureElement || document.querySelector('video');
+                if (pipVideo) {
+                    if (document.pictureInPictureElement) {
+                        document.exitPictureInPicture();
+                    } else {
+                        pipVideo.requestPictureInPicture().catch(e => console.error('PiP error:', e));
+                    }
                 }
             };
-            document.body.appendChild(btn);
+
+            // H key listener for PiP
+            document.addEventListener('keydown', function(e) {
+                if (e.key.toLowerCase() === 'h') {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    window.togglePiP();
+                }
+            }, true);
         `).catch(() => {});
     });
 }

@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "mcp__auggie__codebase-retrieval",
-      "Bash(npm start)"
+      "Bash(npm start)",
+      "Bash(git -C /c/Users/ltanedo/projects/youtube-tv-xbox-fse log --oneline -10)"
     ]
   }
 }
