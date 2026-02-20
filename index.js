@@ -20,18 +20,23 @@ function createWindow() {
     win.webContents.on('did-finish-load', () => {
         win.webContents.setZoomFactor(0.5);
 
-        // Enter Picture-in-Picture automatically when video starts to enable background play
+        // Create floating PiP button in top right
         win.webContents.executeJavaScript(`
-            const observer = new MutationObserver(() => {
+            const btn = document.createElement('button');
+            btn.id = 'pip-btn';
+            btn.textContent = 'BG PLAY';
+            btn.style.cssText = 'position:fixed; top:10px; right:10px; z-index:999999; background:rgba(255,0,0,0.8); color:white; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; font-size:14px; font-weight:bold;';
+            btn.onclick = function() {
                 const video = document.querySelector('video');
-                if (video && video.src && document.pictureInPictureElement !== video) {
-                    try {
-                        video.requestPictureInPicture().catch(() => {});
-                        console.log('Entered PiP for background play');
-                    } catch(e) {}
+                if (video && document.pictureInPictureElement === video) {
+                    document.exitPictureInPicture();
+                    btn.textContent = 'BG PLAY';
+                } else if (video) {
+                    video.requestPictureInPicture().catch(e => console.error('PiP error:', e));
+                    btn.textContent = 'EXIT PiP';
                 }
-            });
-            observer.observe(document.body, { childList: true, subtree: true });
+            };
+            document.body.appendChild(btn);
         `).catch(() => {});
     });
 }
