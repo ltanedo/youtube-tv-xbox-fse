@@ -11,23 +11,28 @@ function createWindow() {
             preload: path.join(__dirname, 'preload.js')
         }
     });
-    // pressing alt can bring up the menu bar even when its hidden. This accounts for that and disables it entirely
     win.setMenu(null);
 
     win.loadURL('https://youtube.com/tv', {
         userAgent: 'Mozilla/5.0 (PS4; Leanback Shell) Gecko/20100101 Firefox/65.0 LeanbackShell/01.00.01.75 Sony PS4/ (PS4, , no, CH)'
     });
 
-    // setting zoom 50% to enable higher resolutions. has no effect on the applications UI.
     win.webContents.on('did-finish-load', () => {
         win.webContents.setZoomFactor(0.5);
 
-        // Override Page Visibility API to prevent YouTube auto-pause on background
+        // Enter Picture-in-Picture automatically when video starts to enable background play
         win.webContents.executeJavaScript(`
-            Object.defineProperty(document, 'hidden', { get: () => false, configurable: true });
-            Object.defineProperty(document, 'visibilityState', { get: () => 'visible', configurable: true });
-            console.log('Background play: Visibility API overridden');
-        `);
+            const observer = new MutationObserver(() => {
+                const video = document.querySelector('video');
+                if (video && video.src && document.pictureInPictureElement !== video) {
+                    try {
+                        video.requestPictureInPicture().catch(() => {});
+                        console.log('Entered PiP for background play');
+                    } catch(e) {}
+                }
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+        `).catch(() => {});
     });
 }
 
