@@ -16,9 +16,14 @@
       "package.json"
     ],
     "win": {
-      "target": ["portable"],
-      "icon": "img/icon/youtube.ico",
-      "artifactName": "${productName}_v${version}_x64_win.${ext}"
+      "target": ["nsis", "portable"],
+      "icon": "img/icon/youtube.ico"
+    },
+    "nsis": {
+      "artifactName": "${productName}_v${version}_x64_win_setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName}_v${version}_x64_win_portable.${ext}"
     },
     "linux": {
       "target": ["AppImage"],
