@@ -2,45 +2,14 @@
   "name": "youtube-tv-client",
   "version": "1.0.1",
   "description": "YouTube client that uses the TV interface",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron .",
-    "build": "electron-builder",
-    "build:win": "electron-builder --win",
-    "build:msi": "electron-builder --win --config.compression=store"
-  },
-  "build": {
-    "appId": "com.haroon01.youtubetvclient",
-    "productName": "YouTubeTV",
-    "files": [
-      "index.js",
-      "package.json",
-      "xinput-poller.ps1",
-      "yttv-icon.png"
-    ],
-    "win": {
-      "target": ["nsis", "portable"],
-      "icon": "img/icon/youtube.ico"
-    },
-    "nsis": {
-      "artifactName": "${productName}_v${version}_x64_win_setup.${ext}"
-    },
-    "portable": {
-      "artifactName": "${productName}_v${version}_x64_win_portable.${ext}"
-    },
-    "linux": {
-      "target": ["AppImage"],
-      "icon": "img/icon/youtube.png",
-      "artifactName": "${productName}_v${version}_linux.${ext}",
-      "category": "Utility"
-    }
+    "dev": "tauri dev",
+    "build": "tauri build"
   },
   "keywords": [],
-  "author": "Haroon01",
+  "author": "tauri",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^31.3.0",
-    "electron-builder": "^24.13.3"
+    "@tauri-apps/cli": "latest"
   }
 }
