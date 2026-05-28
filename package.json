@@ -1,6 +1,6 @@
 {
   "name": "youtube-tv-client",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "YouTube client that uses the TV interface",
   "scripts": {
     "dev": "tauri dev",
